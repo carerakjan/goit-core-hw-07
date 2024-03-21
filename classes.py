@@ -1,5 +1,5 @@
 from collections import UserDict
-from validation import validate_phone_number
+from validation import validate_phone_number, validate_birthday
 from datetime import datetime
 
 
@@ -19,16 +19,14 @@ class Phone(Field):
     def is_valid(self):
         return validate_phone_number(self.value)
 
+#Validation.for('birthday').validate()
 
 class Birthday(Field):
     def __init__(self, value):
-        try:
-            # Додайте перевірку коректності даних
-            # та перетворіть рядок на об'єкт datetime
-            pass
-        except ValueError:
-            raise ValueError("Invalid date format. Use DD.MM.YYYY")
-
+        _, error = validate_birthday(value)
+        if error:
+            raise error
+        super.__init__(datetime.strptime(value, '%d.%m.%Y'))
 
 class Record:
     def __init__(self, name):
@@ -62,6 +60,9 @@ class Record:
 
     def find_phone(self, phone_number):
         return next((item for item in self.phones if item.value == phone_number), None)
+
+    def add_birthday(self, birthday):
+        self.birthday = Birthday(birthday)
 
     def __str__(self):
         return f"Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}"
