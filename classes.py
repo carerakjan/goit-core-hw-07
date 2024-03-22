@@ -1,6 +1,7 @@
 from collections import UserDict
 from validation import validate_phone_number, validate_birthday
 from datetime import datetime
+from get_upcomig_birth import get_upcoming_birthdays
 
 
 class Field:
@@ -26,7 +27,11 @@ class Birthday(Field):
         _, error = validate_birthday(value)
         if error:
             raise error
+
         super.__init__(datetime.strptime(value, '%d.%m.%Y'))
+
+    def __str__(self):
+       return self.value.strftime('%Y.%m.%d')
 
 class Record:
     def __init__(self, name):
@@ -74,9 +79,29 @@ class AddressBook(UserDict):
         if name not in self.data.keys():
             self.data[name] = record
 
-    def find(self, name):
-        return self.data.get(name)
+    def find(self, name, default) -> Record:
+        return self.data.get(name, default)
 
     def delete(self, name):
         if name in self.data.keys():
             del self.data[name]
+
+    def add_birthday(self, name, birthday):
+        record = self.find(name)
+        if record:
+            record.add_birthday(birthday)
+
+    def show_birthday(self, name):
+        record = self.find(name, f'There is no contact with name: {name}')
+        return record.get('birthday', 'Contact has no birthday yet') if isinstance(Record) else record
+
+    def birthdays(self):
+        records = [{
+            'name': rec.name,
+            'birthday': rec.birthday.strftime('%Y.%m.%d')
+        } for rec in self.data.values() if rec.birthday]
+       
+        return get_upcoming_birthdays(records)
+    
+    def __str__(self) -> str:
+        return '\n'.join(self.data.values())

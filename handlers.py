@@ -1,4 +1,5 @@
 from decorators import input_error, parse_error
+from classes import Record, AddressBook
 
 
 @parse_error
@@ -9,23 +10,40 @@ def parse_input(user_input):
 
 
 @input_error
-def add_contact(args, contacts):
+def add_contact(args, book: AddressBook):
     name, phone = args
-    contacts[name] = phone
+    new_contact = Record(name)
+    new_contact.add_phone(phone)
+    book.add_record(new_contact)
     return "Contact added."
 
 
 @input_error
-def change_contact(args, contacts):
+# TODO: ???
+def change_contact(args, book: AddressBook):
     name, phone = args
-    contacts[name] = phone
+    contact = book.find(name)
+    # contact.e
     return 'Contact updated.'
 
 
 @input_error
-def show_phone(args, contacts):
-    return contacts[args[0]]
+def show_phone(args, book: AddressBook):
+    return book.find(args[0]).phones
 
 
-def show_all(contacts):
-    return '\n'.join([f'{name}, {num}' for name, num in contacts.items()])
+def show_all(book: AddressBook):
+    return book
+
+@input_error
+def add_birthday(args, book: AddressBook):
+    book.add_birthday(*args)
+
+
+@input_error
+def show_birthday(args, book: AddressBook):
+    return book.find(args[0]).birthday
+
+@input_error
+def birthdays(args, book: AddressBook):
+    return book.birthdays()
