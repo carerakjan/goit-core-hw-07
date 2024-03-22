@@ -1,8 +1,8 @@
-from handlers import parse_input, add_contact, change_contact, show_phone, show_all
+from handlers import (parse_input, add_contact, change_contact, 
+                      show_phone, show_all, add_birthday, show_birthday, birthdays)
 
 
-def run_assistant():
-    contacts = {}
+def run_assistant(book):
     print("Welcome to the assistant bot!")
     while True:
         user_input = input("Enter a command: ")
@@ -14,12 +14,18 @@ def run_assistant():
         elif command == "hello":
             print("How can I help you?")
         elif command == "add":
-            print(add_contact(args, contacts))
+            print(add_contact(args, book))
         elif command == "change":
-            print(change_contact(args, contacts))
+            print(change_contact(args, book))
         elif command == "phone":
-            print(show_phone(args, contacts))
+            print(show_phone(args, book))
         elif command == "all":
-            print(show_all(contacts))
+            print(show_all(book))
+        elif command == 'add-birthday':
+            print(add_birthday(args, book))
+        elif command == 'show-birthday':
+            print(show_birthday(args, book))
+        elif command == 'birthdays':
+            print(birthdays(book))    
         else:
             print("Invalid command.")

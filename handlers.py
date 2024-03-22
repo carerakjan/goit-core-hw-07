@@ -35,15 +35,16 @@ def show_phone(args, book: AddressBook):
 def show_all(book: AddressBook):
     return book
 
-@input_error
+# @input_error
 def add_birthday(args, book: AddressBook):
-    book.add_birthday(*args)
+    book.add_birthday(args[0], args[1])
+    return 'Birthday added'
 
 
-@input_error
+# @input_error
 def show_birthday(args, book: AddressBook):
     return book.find(args[0]).birthday
 
-@input_error
-def birthdays(args, book: AddressBook):
+# @input_error
+def birthdays(book: AddressBook):
     return book.birthdays()

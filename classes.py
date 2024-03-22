@@ -24,11 +24,11 @@ class Phone(Field):
 
 class Birthday(Field):
     def __init__(self, value):
-        _, error = validate_birthday(value)
-        if error:
+        is_valid, error = validate_birthday(value)
+        if not is_valid:
             raise error
 
-        super.__init__(datetime.strptime(value, '%d.%m.%Y'))
+        super().__init__(datetime.strptime(value, '%d.%m.%Y'))
 
     def __str__(self):
        return self.value.strftime('%Y.%m.%d')
@@ -67,19 +67,29 @@ class Record:
         return next((item for item in self.phones if item.value == phone_number), None)
 
     def add_birthday(self, birthday):
+        if self.birthday:
+            raise ValueError('Birthday already specified')
+        
         self.birthday = Birthday(birthday)
 
     def __str__(self):
-        return f"Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}"
-
-
+        parts = [p for p in [
+            f"Contact name: {self.name.value}",
+            f"birthday: {self.birthday}" if self.birthday else '',
+            f"phones: {'; '.join(p.value for p in self.phones)}"
+        ] if bool(p)]
+        return ', '.join(parts)
+    
 class AddressBook(UserDict):
     def add_record(self, record: Record):
         name = record.name.value
-        if name not in self.data.keys():
+        if name in self.data.keys():
+            found_record = self.data[name]
+            found_record.add_phone(record.phones[0].value)
+        else:
             self.data[name] = record
 
-    def find(self, name, default) -> Record:
+    def find(self, name, default = None) -> Record:
         return self.data.get(name, default)
 
     def delete(self, name):
@@ -88,8 +98,10 @@ class AddressBook(UserDict):
 
     def add_birthday(self, name, birthday):
         record = self.find(name)
-        if record:
-            record.add_birthday(birthday)
+        if not record:
+            raise ValueError('Nothing found')
+        
+        record.add_birthday(birthday)
 
     def show_birthday(self, name):
         record = self.find(name, f'There is no contact with name: {name}')
@@ -98,10 +110,10 @@ class AddressBook(UserDict):
     def birthdays(self):
         records = [{
             'name': rec.name,
-            'birthday': rec.birthday.strftime('%Y.%m.%d')
+            'birthday': str(rec.birthday)
         } for rec in self.data.values() if rec.birthday]
        
         return get_upcoming_birthdays(records)
     
     def __str__(self) -> str:
-        return '\n'.join(self.data.values())
+        return '\n'.join([str(record) for record in self.data.values()])
