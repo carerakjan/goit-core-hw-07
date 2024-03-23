@@ -1,5 +1,5 @@
 from assistant import run_assistant
-from classes import AddressBook, Record
+from classes import AddressBook
 
 
 def main():
