@@ -72,7 +72,7 @@ def show_birthday(args, book: AddressBook):
 
 def birthdays(book: AddressBook):
     if not book:
-        'No contacts yet.'
+        return 'No contacts yet.'
     congratulation_list = book.get_congratulation_list()
     if not congratulation_list:
         return 'No one to congratulate.'

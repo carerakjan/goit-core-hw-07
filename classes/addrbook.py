@@ -16,7 +16,7 @@ class AddressBook(UserDict):
             del self.data[name]
 
     def get_congratulation_list(self):
-        to_dict = [vars(rec) for rec in self.data.values()]
+        to_dict = [vars(rec) for rec in self.data.values() if rec.birthday]
         return get_upcoming_birthdays(to_dict)
 
     def __str__(self) -> str:
