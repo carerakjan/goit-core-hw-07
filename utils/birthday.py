@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 
 
 def get_birthday_this_year(user):
-    birthday = datetime.strptime(user['birthday'], '%Y.%m.%d')
+    birthday = datetime.strptime(str(user['birthday']), '%Y.%m.%d')
     today = datetime.today()
 
     if calendar.isleap(birthday.year) and \
@@ -39,11 +39,3 @@ def add_congratulation_date(user):
 
 def get_upcoming_birthdays(users):
     return [u for u in [add_congratulation_date(user) for user in users] if u]
-
-# users = [
-#     {"name": "John Doe", "birthday": "1985.02.24"},
-#     {"name": "Jane Smith", "birthday": "1992.02.29"}
-# ]
-
-# upcoming_birthdays = get_upcoming_birthdays(users)
-# print("The birthdays on this week:", upcoming_birthdays)

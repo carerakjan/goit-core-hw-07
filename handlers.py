@@ -11,44 +11,72 @@ def parse_input(user_input):
 
 @input_error
 def add_contact(args, book: AddressBook):
-    name, phone = args
-    new_contact = AddressBookRecord(name)
-    new_contact.add_phone(phone)
-    book.add_record(new_contact)
-
-    return "Contact added."
+    name, phone, *_ = args
+    record = book.find(name)
+    message = "Contact updated."
+    if record is None:
+        record = AddressBookRecord(name)
+        book.add_record(record)
+        message = "Contact added."
+    if phone:
+        record.add_phone(phone)
+    return message
 
 
 @input_error
 def change_contact(args, book: AddressBook):
-    name, old_phone, new_phone = args
-    contact = book.find(name)
-    contact.edit_phone(old_phone, new_phone)
-
+    name, old_phone, new_phone, *_ = args
+    record = book.find(name)
+    if record is None:
+        return 'Contact not found.'
+    phone = record.find_phone(old_phone)
+    if phone is None:
+        return 'No number to change.'
+    record.edit_phone(old_phone, new_phone)
     return 'Contact updated.'
 
 
 @input_error
 def show_phone(args, book: AddressBook):
-    return book.show_phones(args[0])
+    record = book.find(args[0])
+    if record is None:
+        return 'Contact not found.'
+    return record.stringify_phones()
 
 
 def show_all(book: AddressBook):
-    return book
+    return book or 'No contacts yet.'
 
 
 @input_error
 def add_birthday(args, book: AddressBook):
-    name, birthday = args
-    book.add_birthday(name, birthday)
-
+    name, birthday, *_ = args
+    record = book.find(name)
+    if record is None:
+        return 'Contact not found.'
+    if record.birthday:
+        return 'Birthday cannot be added twice.'
+    record.add_birthday(birthday)
     return 'Birthday added.'
 
 
 @input_error
 def show_birthday(args, book: AddressBook):
-    return book.show_birthday(args[0])
+    record = book.find(args[0])
+    if record is None:
+        return 'Contact not found.'
+    if record.birthday is None:
+        return 'Contact has no birthday yet.'
+    return record.birthday
 
 
 def birthdays(book: AddressBook):
-    return book.birthdays()
+    if not book:
+        'No contacts yet.'
+    congratulation_list = book.get_congratulation_list()
+    if not congratulation_list:
+        return 'No one to congratulate.'
+    return '\n'.join(
+        (f"Contact name: {item['name']}, "
+         f"congratulate: {item['congratulation_date']}") for item in congratulation_list
+    )

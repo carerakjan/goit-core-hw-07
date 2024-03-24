@@ -30,4 +30,4 @@ class Validation:
 
 Validation('phone', r'^\d{10}$', "Invalid phone format. Use 10 digits")
 Validation('birthday', r'^(0?[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[1,2])\.(19|20)\d{2}$',
-           "Invalid date format. Use real date in format DD.MM.YYYY")
+           "Invalid date or date format. Use DD.MM.YYYY")
