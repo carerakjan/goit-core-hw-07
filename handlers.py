@@ -52,12 +52,13 @@ def show_all(book: AddressBook):
 def add_birthday(args, book: AddressBook):
     name, birthday, *_ = args
     record = book.find(name)
+    message = 'Birthday added.'
     if record is None:
         return 'Contact not found.'
     if record.birthday:
-        return 'Birthday cannot be added twice.'
+        message = 'Birthday updated.'
     record.add_birthday(birthday)
-    return 'Birthday added.'
+    return message
 
 
 @input_error
