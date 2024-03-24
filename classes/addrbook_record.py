@@ -1,4 +1,4 @@
-from classes.addrboob_record_fields import Name, Phone, Birthday
+from classes.addrbook_record_fields import Name, Phone, Birthday
 
 
 class AddressBookRecord:
