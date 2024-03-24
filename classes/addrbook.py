@@ -1,9 +1,11 @@
 from collections import UserDict
+
+from classes.addrbook_record import AddressBookRecord
 from utils.birthday import get_upcoming_birthdays
-from classes.addrbook_record import Record
+
 
 class AddressBook(UserDict):
-    def add_record(self, record: Record):
+    def add_record(self, record: AddressBookRecord):
         name = record.name.value
         if name in self.data.keys():
             found_record = self.data[name]
@@ -11,7 +13,7 @@ class AddressBook(UserDict):
         else:
             self.data[name] = record
 
-    def find(self, name, default = None) -> Record:
+    def find(self, name) -> AddressBookRecord:
         try:
             return self.data[name]
         except KeyError:
@@ -27,7 +29,7 @@ class AddressBook(UserDict):
 
     def add_birthday(self, name, birthday):
         record = self.find(name)
-        
+
         record.add_birthday(birthday)
 
     def show_birthday(self, name):
@@ -42,8 +44,8 @@ class AddressBook(UserDict):
 
         return '\n'.join(
             (f"Contact name: {item['name']}, "
-                f"congratulation date: {item['congratulation_date']}") for item in get_upcoming_birthdays(records)
+             f"congratulation date: {item['congratulation_date']}") for item in get_upcoming_birthdays(records)
         ) or 'No upcoming birthdays'
-    
+
     def __str__(self) -> str:
         return '\n'.join(str(record) for record in self.data.values()) or 'No contacts'

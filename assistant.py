@@ -1,4 +1,4 @@
-from handlers import (parse_input, add_contact, change_contact, 
+from handlers import (parse_input, add_contact, change_contact,
                       show_phone, show_all, add_birthday, show_birthday, birthdays)
 
 
@@ -26,6 +26,6 @@ def run_assistant(book):
         elif command == 'show-birthday':
             print(show_birthday(args, book))
         elif command == 'birthdays':
-            print(birthdays(book))    
+            print(birthdays(book))
         else:
             print("Invalid command.")

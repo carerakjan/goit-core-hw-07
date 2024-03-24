@@ -26,7 +26,7 @@ def add_congratulation_date(user):
     congratulation_date = user_birthday_this_year
     weekday = user_birthday_this_year.weekday()
 
-    if (weekday > 4):
+    if weekday > 4:
         next_monday = user_birthday_this_year + timedelta(7 - weekday)
         congratulation_date = next_monday
 
@@ -39,7 +39,6 @@ def add_congratulation_date(user):
 
 def get_upcoming_birthdays(users):
     return [u for u in [add_congratulation_date(user) for user in users] if u]
-
 
 # users = [
 #     {"name": "John Doe", "birthday": "1985.02.24"},

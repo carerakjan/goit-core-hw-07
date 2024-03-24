@@ -1,14 +1,14 @@
-#Validation.for('birthday').validate()
 import re
 
 
 class ValidationError(Exception):
     pass
 
+
 class Validation:
     validations = {}
 
-    def __init__(self, name: str, pattern:str, error_message:str = '') -> None:
+    def __init__(self, name: str, pattern: str, error_message: str = '') -> None:
         self.name = name
         self.pattern = pattern
         self.error_message = error_message
@@ -19,10 +19,15 @@ class Validation:
     def validate(self, value: str):
         if not self.template.match(value):
             raise ValidationError(self.error_message or f'Does not math pattern "{self.pattern}"')
-    
-    @classmethod   
-    def preset(cls, name:str):
-        return cls.validations[name]
+
+    @classmethod
+    def by_name(cls, name: str):
+        try:
+            return cls.validations[name]
+        except KeyError:
+            raise ValidationError(f'No such type of validation like "{name}"')
+
 
 Validation('phone', r'^\d{10}$', "Invalid phone format. Use 10 digits")
-Validation('birthday', r'^\d{2}\.\d{2}\.\d{4}$', "Invalid date format. Use DD.MM.YYYY")
+Validation('birthday', r'^(0[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[1,2])\.(19|20)\d{2}$',
+           "Invalid date format. Use DD.MM.YYYY")

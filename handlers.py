@@ -1,5 +1,5 @@
+from classes import AddressBookRecord, AddressBook
 from utils.decorators import input_error
-from classes import Record, AddressBook
 
 
 @input_error
@@ -12,7 +12,7 @@ def parse_input(user_input):
 @input_error
 def add_contact(args, book: AddressBook):
     name, phone = args
-    new_contact = Record(name)
+    new_contact = AddressBookRecord(name)
     new_contact.add_phone(phone)
     book.add_record(new_contact)
 
@@ -42,7 +42,7 @@ def add_birthday(args, book: AddressBook):
     name, birthday = args
     book.add_birthday(name, birthday)
 
-    return 'Birthday added'
+    return 'Birthday added.'
 
 
 @input_error
